@@ -1,13 +1,3 @@
-# 2tierMPC-gzclassim-LLM
-
-Com certeza\! Usei o seu arquivo `README.md` mais recente como base, mantive as instruções originais e integrei todas as seções referentes à configuração e execução com o Ollama e o LLM, como havíamos discutido.
-
-Também preservei a instrução de instalar o **Gazebo 11 (Classic)**, conforme sua solicitação, em vez da versão Citadel mencionada no `README.md` que você anexou, garantindo consistência com a dependência original do projeto.
-
-O resultado é um documento único e coeso, pronto para ser usado no seu repositório.
-
------
-
 # 2tierMPC-LLM: Instruções de Execução e Simulação
 
 ## Visão Geral
