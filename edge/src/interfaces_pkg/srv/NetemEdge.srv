@@ -1,0 +1,8 @@
+string action
+string agv_id
+float32 delay
+float32 distribution
+float32 loss
+float32 timer
+---
+bool success

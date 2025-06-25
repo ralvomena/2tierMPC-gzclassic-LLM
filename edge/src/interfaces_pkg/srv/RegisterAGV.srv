@@ -1,0 +1,4 @@
+string agv_id
+string priority
+---
+bool success

@@ -1,0 +1,2 @@
+string agv_id
+string priority

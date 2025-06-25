@@ -1,0 +1,6 @@
+string action
+Pose goal_point
+float32 linear_velocity
+float32 tolerance
+---
+bool success

@@ -1,0 +1,7 @@
+string action
+float32 delay
+float32 distribution
+float32 loss
+float32 timer
+---
+bool success
