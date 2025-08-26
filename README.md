@@ -143,6 +143,8 @@ O foco na execução é dado aos Cenários 2 e 5, visto que os outros cenários 
   - **Stop:** cessa o movimento de todos os AGVs.
   - **MPC Service:** permite chamar o serviço do MPC para mover um AGV para uma posição específica.
 
+  Nota: o ajuste de velocidade presente no projeto base (parâmetros `high_vel`, `medium_vel` e `low_vel`) não está mais disponível. O AGV inicia com uma velocidade padrão de 1.0 m/s e o valor só é alterado pela LLM durante a simulação (apenas nos Cenários 2 e 5).
+
 ### 3.4. Executando outros cenários
 
 Para inicializar os nós dos outros cenários, apenas altere o número do cenário no comando do `launch file`. Por exemplo, para o cenário 5:
