@@ -32,7 +32,7 @@ A instalação das ferramentas pode ser feita em dois computadores/máquinas vir
 
 3.  **Instalar o CasADi para Python:** siga as instruções de download e instalação neste [link](https://web.casadi.org/get/).
 
-4.  **Instalar o Gazebo 11 (apenas no lado local):** siga as instruções de instalação neste [link](https://www.google.com/search?q=http://gazebosim.org/tutorials%3Ftut%3Dinstall_ubuntu%26cat%3Dinstall).
+4.  **Instalar o Gazebo 11 (apenas no lado local):** siga as instruções de instalação neste [link](https://classic.gazebosim.org/tutorials?tut=install_ubuntu).
 
 5.  **Instalar os pacotes de integração ROS/Gazebo (apenas no lado local):** Execute os comandos:
 
