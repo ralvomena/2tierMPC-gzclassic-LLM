@@ -22,7 +22,6 @@ setup(
         'console_scripts': [
             "mpc_node = edge_tier_pkg.mpc_node:main",
             "supervisor = edge_tier_pkg.supervisor:main",
-            "supervisor_2 = edge_tier_pkg.supervisor_2:main",
             "netem_edge = edge_tier_pkg.netem_node_edge:main",
         ],
     },

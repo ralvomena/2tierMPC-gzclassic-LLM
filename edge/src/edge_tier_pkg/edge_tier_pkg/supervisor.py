@@ -13,7 +13,6 @@ import edge_tier_pkg.supervisor_gui as gui
 
 # Import scenarios classes
 from edge_tier_pkg.scenario1 import Scenario1
-# from edge_tier_pkg.scenario2 import Scenario2
 from edge_tier_pkg.scenario2_llm import Scenario2
 from edge_tier_pkg.scenario3 import Scenario3
 from edge_tier_pkg.scenario4 import Scenario4

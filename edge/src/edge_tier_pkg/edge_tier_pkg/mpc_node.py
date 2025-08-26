@@ -41,8 +41,6 @@ class MPCEdgeNode(Node, MPC):
         # Declare and get parameters (all of them can be changed in launch file)
         self.declare_parameter("agv_id", "agv_1")
         self.agv_id = self.get_parameter("agv_id").value
-        self.declare_parameter("priority", "high")
-        self.priority = self.get_parameter("priority").value
         self.declare_parameter("sim_name", "sim_name")
         self.sim_name = self.get_parameter("sim_name").value
         self.declare_parameter("save_sim_data", False)
@@ -53,12 +51,6 @@ class MPCEdgeNode(Node, MPC):
         self.d_safe = self.get_parameter("d_safe").value
         self.declare_parameter("d_safe_obs", 1.0)
         self.d_safe_obs = self.get_parameter("d_safe_obs").value
-        self.declare_parameter("high_vel", 1.0)
-        self.high_vel = self.get_parameter("high_vel").value
-        self.declare_parameter("medium_vel", 0.75)
-        self.medium_vel = self.get_parameter("medium_vel").value
-        self.declare_parameter("low_vel", 0.75)
-        self.low_vel = self.get_parameter("low_vel").value
         self.declare_parameter("scenario", 1)
         self.scenario = self.get_parameter("scenario").value
         self.declare_parameter("obstacles", 5)
