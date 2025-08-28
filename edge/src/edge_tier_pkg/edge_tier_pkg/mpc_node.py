@@ -154,9 +154,6 @@ class MPCEdgeNode(Node, MPC):
             if agv.agv_id != self.agv_id and agv.agv_id not in self.agv_list:
                 OtherAGVs(agv.agv_id, self)
                 self.agv_list.append(agv.agv_id)
-            if agv.agv_id == self.agv_id and agv.priority != self.priority:
-                self.priority = agv.priority
-                self.renew_mpc()
         
         new_n = len(msg.agv_list)
         if self.limit_n > 0:

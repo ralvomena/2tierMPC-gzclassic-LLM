@@ -16,16 +16,17 @@ from edge_tier_pkg.scenario1 import Scenario1
 from edge_tier_pkg.scenario2_llm import Scenario2
 from edge_tier_pkg.scenario3 import Scenario3
 from edge_tier_pkg.scenario4 import Scenario4
+from edge_tier_pkg.scenario5 import Scenario5
 
 # Messages and services interfaces
 from interfaces_pkg.msg import AGVMsg, AGVList, Trajectory, SimStatus
-from interfaces_pkg.srv import RegisterAGV, CallMPC
+from interfaces_pkg.srv import RegisterAGV, CallMPC, MPCtuning
 from nav_msgs.msg import Odometry
 
 gui_win = None
 gui_start = False
 
-class SupervisorNode(Node, Scenario2): #Inherit the scenario class you want to simulate
+class SupervisorNode(Node, Scenario5): #Inherit the scenario class you want to simulate
     """
     Supervisor node class. The Supervisor detects all the AGVs with local nodes on and register them.
     It has a GUI, that will provide informations of simulations and from where you can call the MPC service individually for each AGV.
@@ -209,6 +210,7 @@ class AGV:
         self.__velocity = []
         self.__priority = priority
         self.__mpc_service_name = self.__agv_id + '/mpc/planning'
+        self.__mpc_tuning_service_name = self.__agv_id + '/mpc/tuning'
         self.__mpc_edge_status = False
         self.__mpc_local_status = False
         self.__status = 'parked'
@@ -330,7 +332,7 @@ class AGV:
     
         return yaw_z # in radians
 
-    def call_mpc(self, action, x, y, theta, linear_velocity, tolerance=None):
+    def call_mpc(self, action, x, y, theta, linear_velocity=None, tolerance=None):
         """
         This function calls the mpc service on mpc edge node.
         """
@@ -343,7 +345,9 @@ class AGV:
             request.goal_point.x = x
             request.goal_point.y = y
             request.goal_point.theta = math.radians(theta)
-            request.linear_velocity = linear_velocity
+            
+            if linear_velocity:
+                request.linear_velocity = linear_velocity
 
             if tolerance:
                 request.tolerance = tolerance
@@ -368,10 +372,46 @@ class AGV:
             response = future.result()
             if response.success:
                 if action == 'move':
-                    self.node_instance.get_logger().info(f"Calling MPC service for {agv_id.upper()} with x:{x}, y:{y}, theta:{theta}, v:{linear_velocity}.\n")
+                    # self.node_instance.get_logger().info(f"Calling MPC service for {agv_id.upper()} with x:{x}, y:{y}, theta:{theta}, v:{linear_velocity}.\n")
                     gui_win._log_info(f"Calling MPC service for {agv_id.upper()} with x:{x}, y:{y}, theta:{theta}, v:{linear_velocity}.")
                 if action == 'stop':
                     self.node_instance.get_logger().info(f"Parando o {agv_id.upper()}...\n")
+            else:
+                self.node_instance.get_logger().warn("Service call denied.")
+        except Exception as e:
+            self.node_instance.get_logger().error("Service call failed %r" % (e,))
+
+    def call_mpc_tuning(self, Q, R):
+        """
+        This function calls the mpc tuning service on mpc edge node.
+        """
+
+        if self.__mpc_edge_status:
+            client = self.node_instance.create_client(MPCtuning, self.__mpc_tuning_service_name)
+            request = MPCtuning.Request()
+
+            self.node_instance.get_logger().info(f"Chamada do serviço de ajuste do MPC para {self.__agv_id.upper()} com Q:{Q}, R:{R}.")
+
+            request.q = Q
+            request.r = R
+
+            future = client.call_async(request)
+            future.add_done_callback(partial(self.callback_mpc_tuning, agv_id=self.__agv_id, q=Q, r=R))
+        else:
+            self.node_instance.get_logger().error(f"MPC edge from {self.__agv_id.upper()} is offline.")
+            gui_win._log_info(f"Erro na chamada do serviço: o MPC da borda do {self.__agv_id.upper()} está desligado.")
+
+
+    def callback_mpc_tuning(self, future, agv_id, q, r):
+        """
+        Callback to treat the response of mpc edge node when the mpc tuning service is called.
+        """
+
+        try:
+            response = future.result()
+            if response.success:
+                # self.node_instance.get_logger().info(f"Calling MPC tuning service for {agv_id.upper()} with q:{q}, r:{r}.\n")
+                gui_win._log_info(f"Calling MPC tuning service for {agv_id.upper()} with q:{q}, r:{r}.")
             else:
                 self.node_instance.get_logger().warn("Service call denied.")
         except Exception as e:

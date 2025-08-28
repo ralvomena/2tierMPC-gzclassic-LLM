@@ -22,6 +22,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SimStatus.msg"
   "srv/RegisterAGV.srv"
   "srv/CallMPC.srv"
+  "srv/MPCtuning.srv"
   "srv/CloseMPC.srv"
   "srv/NetemEdge.srv"
 )
