@@ -163,6 +163,14 @@ Para inicializar os nós dos outros cenários, apenas altere o número do cenár
   * **Local (Terminal 1):** `ros2 launch local_launch scn_5.launch.py`
   * **Local (Terminal 2):** `ros2 launch local_launch local_5_all.launch.py`
 
+Para o Cenário 5 será necessário instalar o scipy no lado da borda:
+
+```bash
+pip3 install scipy
+```
+
+Lembre-se também de alterar o IP do servidor do Ollama no código `scenario5.py`.
+
 ## 4\. Configurações adicionais
 
   * **Parâmetros:** vários parâmetros como `d_safe`, `d_safe_obs`, `obstacles`, e `limit_n` (quantidade de AGVs/obstáculos a serem considerados pelo MPC) podem ser ajustados nos `launch files` da borda para otimizar o desempenho. No Cenário 4, a quantidade de AGVs é definida pela variável `n` nos `launch files` locais.
