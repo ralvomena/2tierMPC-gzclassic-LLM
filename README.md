@@ -1,6 +1,6 @@
 # 2tierMPC-gzclassim-LLM
 
-# 2tierMPC-LLM: instruções de execução e simulação
+# Instruções de execução e simulação
 
 ## Visão geral
 
@@ -38,6 +38,12 @@ A instalação das ferramentas pode ser feita em dois computadores/máquinas vir
 
     ```bash
     sudo apt-get install ros-foxy-gazebo-ros-pkgs
+    ```
+
+6. **Instalar o pacote `transforms3d` (apenas no lado local):**
+
+    ```bash
+    pip3 install transforms3d
     ```
 
 ### 1.2. Ferramentas para integração com a LLM (para os Cenários 2 e 5)
@@ -79,10 +85,10 @@ Para executar a funcionalidade de otimização com o LLM, as seguintes ferrament
 
 Para a preparação dos pacotes no lado local, a mesma sequência de comandos deve ser executada a partir do diretório `/local`:
 
-```bash
-colcon build # adicione o --sylink-install para alteração do código sem a necessidade de reexecutar o colcon 
-echo "source /caminho_ate_o_diretorio/local/install/setup.bash" >> ~/.bashrc
-```
+  ```bash
+  colcon build # adicione o --sylink-install para alteração do código sem a necessidade de reexecutar o colcon 
+  echo "source /caminho_ate_o_diretorio/local/install/setup.bash" >> ~/.bashrc
+  ```
 
 **Atenção:** Lembre-se de substituir `/caminho_ate_o_diretorio/` pelo caminho absoluto correto em sua máquina e de abrir um novo terminal para que as alterações tenham efeito.
 
@@ -92,7 +98,11 @@ O foco na execução é dado aos Cenários 2 e 5, visto que os outros cenários 
 
 ### 3.1. Configuração do Cenário 2 (Com LLM)
 
-1.  **Iniciar o Servidor Ollama:** conforme a seção 1.2, garanta que o servidor Ollama esteja rodando e acessível na rede.
+1.  **Iniciar o Servidor Ollama:** o comando `ollama serve` inicia o servidor na porta padrão (11434) e permite conexões apenas do seu computador (localhost). Se você for executar os lados da borda e local em computadores/máquinas virtuais diferentes, abra um terminal e execute:
+
+    ```bash
+    OLLAMA_HOST=0.0.0.0 ollama serve #substitua 0.0.0.0 pelo IP do computador/máquina virtual 
+    ```
 
 2.  **Alterar a classe do Supervisor:** abra o arquivo `supervisor.py` no pacote `edge_tier_pkg`. Garanta que a classe `SupervisorNode` herde da classe `Scenario2`:
 
@@ -135,13 +145,13 @@ O foco na execução é dado aos Cenários 2 e 5, visto que os outros cenários 
         ros2 launch local_launch local_2_all.launch.py
         ```
 
-3.  **Iniciando a Simulação no Gazebo:** após a abertura do Gazebo, o Supervisor detectará e registrará os AGVs na GUI.
+3.  **Iniciando a simulação no Gazebo:** após a abertura do Gazebo, o Supervisor detectará e registrará os AGVs na GUI.
 
-### 3.3. Interagindo com a Simulação via GUI
+### 3.3. Interagindo com a simulação via GUI
 
   - **Start scenario:** inicia os procedimentos do cenário. Nos Cenário 2 e 5 a interação com a LLM será ativada.
   - **Stop:** cessa o movimento de todos os AGVs.
-  - **MPC Service:** permite chamar o serviço do MPC para mover um AGV para uma posição específica.
+  - **MPC Service:** permite chamar o serviço do MPC para mover um AGV para uma posição específica (utilize antes de iniciar o cenário para evitar conflito com as chamadas do MPC pelo Supervisor).
 
   Nota: o ajuste de velocidade presente no projeto base (parâmetros `high_vel`, `medium_vel` e `low_vel`) não está mais disponível. O AGV inicia com uma velocidade padrão de 1.0 m/s e o valor só é alterado pela LLM durante a simulação (apenas nos Cenários 2 e 5).
 

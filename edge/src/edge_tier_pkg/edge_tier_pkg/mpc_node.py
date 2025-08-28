@@ -199,7 +199,7 @@ class MPCEdgeNode(Node, MPC):
         
         request = RegisterAGV.Request()
         request.agv_id = self.agv_id
-        request.priority = self.priority
+        request.priority = 'none'
 
         future = client.call_async(request)
         future.add_done_callback(partial(self.callback_register_agv, agv_id=self.agv_id))
