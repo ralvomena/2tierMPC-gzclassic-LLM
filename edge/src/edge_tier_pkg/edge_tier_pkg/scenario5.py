@@ -77,8 +77,11 @@ class Scenario5:
         self.executed_path = []
         self.has_converged = False
 
-        self.ollama_url = "http://192.168.5.112:11434/api/generate"
+        self.ollama_ip = "192.168.5.150"
+        self.ollama_port = 11434 
         self.llm_model = "phi3"
+        self.ollama_url = f"http://{self.ollama_ip}:{self.ollama_port}/api/generate"
+        
         self.mpc_weights = {"Q": [5.0, 5.0, 0.5], "R": [0.5, 0.5]}
         self.convergence_thresholds = {"Q": 0.1, "R": 0.05}
         
