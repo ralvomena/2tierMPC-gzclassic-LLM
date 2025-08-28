@@ -36,6 +36,7 @@ setup(
             "scn_2 = spawn_pkg.scn_2:main",
             "scn_3 = spawn_pkg.scn_3:main",
             "scn_4 = spawn_pkg.scn_4:main",
+            "scn_5 = spawn_pkg.scn_4:main",
         ],
     },
 )
