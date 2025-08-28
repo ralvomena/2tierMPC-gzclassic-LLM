@@ -14,7 +14,7 @@ from rclpy.node import Node
 
 # Messages and services interfaces
 from interfaces_pkg.msg import AGVList, Trajectory
-from interfaces_pkg.srv import RegisterAGV, CallMPC, CloseMPC
+from interfaces_pkg.srv import RegisterAGV, CallMPC, CloseMPC, MPCtuning
 from nav_msgs.msg import Odometry
 
 # QoS profile used for the trajectory publisher
@@ -108,8 +108,10 @@ class MPCEdgeNode(Node, MPC):
         # Start services
         self.mpc_service_name = self.agv_id + '/mpc/planning'
         self.close_mpc_name = self.agv_id + '/mpc/close'
+        self.mpc_tuning_name = self.agv_id + '/mpc/tuning'
         self.call_mpc_server_ = self.create_service(CallMPC, self.mpc_service_name, self.callback_call_mpc)
         self.close_mpc = self.create_service(CloseMPC, self.close_mpc_name, self.callback_close_mpc)
+        self.mpc_tuning = self.create_service(MPCtuning, self.mpc_tuning_name, self.callback_mpc_tuning)
         
         # Start CPU and memory usage thread
         Thread(target=self.cpu_memory_usage).start()
@@ -224,10 +226,15 @@ class MPCEdgeNode(Node, MPC):
         :return: returns the response.
         """
 
+
         response.success = True
         if request.action == 'move':
             self.set_xs(request.goal_point.x, request.goal_point.y, request.goal_point.theta)
-            self.set_linear_velocity(request.linear_velocity)
+            
+            if request.linear_velocity > 0:
+                self.set_linear_velocity(request.linear_velocity)
+
+
             self.call_mpc_tracking('move', request.goal_point.x, request.goal_point.y, request.goal_point.theta, 
                                    request.linear_velocity, request.tolerance)
             if self.first_run:
@@ -235,12 +242,34 @@ class MPCEdgeNode(Node, MPC):
                 self.first_run = False
             else:
                 self.timer_.reset()
-            self.get_logger().info("Starting trajectory planning...")
+            # self.get_logger().info("Starting trajectory planning...")
         if request.action == 'stop':
             if self.mpc_run:
                 self.timer_.cancel()
             self.mpc_run = False
             self.call_mpc_tracking('stop', 0.0, 0.0, 0.0, 1.0, 0.3)
+        return response
+
+    def callback_mpc_tuning(self, request, response):
+        """
+        This node is a server for the MPCtuning service, thus, this function is a callback for this service.
+        The function receives a request (the MPC tuning parameters) and returns a response.
+        :param request: service request.
+        :param response: variable to attach the response.
+        :return: returns the response.
+        """
+
+
+        if len(request.q) == 3 and len(request.r) == 2:
+            self.Q = np.diag(request.q)
+            self.R = np.diag(request.r)
+            self.cost_function()
+            response.success = True
+            self.get_logger().info(f"MPC tuning parameters have been updated for {self.agv_id.upper()}.")
+        else:
+            response.success = False
+            self.get_logger().warn(f"Invalid MPC tuning parameters received for {self.agv_id.upper()}.")
+        
         return response
 
     def call_mpc_tracking(self, action, x, y, theta, linear_velocity, tolerance):
