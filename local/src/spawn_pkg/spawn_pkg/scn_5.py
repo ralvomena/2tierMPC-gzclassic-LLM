@@ -26,20 +26,8 @@ class SpawnNode(Node):
             client.wait_for_service()
 
         # AGV ids
-        n = 1
-        agv_ids = ['agv_' + str(i+1) for i in range(n)]
+        agv_ids = 'agv_1'
         poses = {'agv_1': [-0.5, -12.5, math.radians(90)]}
-        separation = 2.5
-        
-        for i in range(2, n + 1):
-            last_pose = poses[f'agv_{i-1}']
-            new_pose = [
-                last_pose[0],
-                last_pose[1] - separation,
-                last_pose[2]
-            ]
-            poses[f'agv_{i}'] = new_pose
-
 
         for agv in agv_ids:
             # Set data for request
