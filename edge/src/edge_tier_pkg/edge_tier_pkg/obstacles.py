@@ -141,3 +141,10 @@ def load_obstacles(scenario):
 
     if scenario == 4:
         pass
+
+    if scenario == 5:
+        cylinder_1 = Obstacle(shape='cylinder', x=0.0, y=-10.0, diameter=1.0)
+        cylinder_2 = Obstacle(shape='cylinder', x=0.0, y=-5.0, diameter=1.0)
+        cylinder_3 = Obstacle(shape='cylinder', x=0.0, y=0.0, diameter=1.0)
+        cylinder_3 = Obstacle(shape='cylinder', x=0.0, y=5.0, diameter=1.0)
+        cylinder_4 = Obstacle(shape='cylinder', x=0.0, y=10.0, diameter=1.0)
